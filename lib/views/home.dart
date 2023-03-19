@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:student_app/controllers/student_controller.dart';
 
+import '../model/student.dart';
 import 'add_student.dart';
 import 'widgets/list_tile.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
-
+  StudentController _studentController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,11 +25,13 @@ class HomePage extends StatelessWidget {
       ),
       body: Column(children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context,index){
-              return MyListTile();
-          }),
+          child: Obx((){
+            return ListView.builder(
+              itemCount: _studentController.students.length,
+              itemBuilder: (context,index){
+              return MyListTile(_studentController.students[index]);
+            });
+          })
         )
       ]),
     );

@@ -6,7 +6,8 @@ class ImagePickerController extends GetxController{
   XFile? image;
   RxString imgPath = ''.obs;
   void pickImage ()async{
-    // image = await _picker.pickImage(source: ImageSource.gallery);
-    // imgPath.value = (image == null) ? "":image!.path;
+    image = await _picker.pickImage(source: ImageSource.gallery);
+    imgPath.value = (image == null) ? "":image!.path;
+    print(imgPath);
   }
 }
