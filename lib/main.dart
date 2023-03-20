@@ -8,8 +8,9 @@ import 'package:student_app/views/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final studDB = StudentDB();
-  studDB.initializeDatabase();
+
+  await StudentDB.initializeDatabase();
+
   runApp(MyApp());
 }
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: ThemeData(useMaterial3: true,colorScheme: darkColorScheme),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }

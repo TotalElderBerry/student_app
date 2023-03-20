@@ -5,6 +5,10 @@ import '../model/student.dart';
 class StudentController extends GetxController{
   RxList students = [].obs;
 
+  void setAllStudent(List<Student> studs){
+    students.addAll(studs);
+  }
+
   List getStudents(){
     return students.value;
   }

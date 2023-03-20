@@ -9,12 +9,14 @@ import 'package:student_app/controllers/student_controller.dart';
 import 'package:student_app/views/home.dart';
 
 import '../model/student.dart';
+import '../sources/db.dart';
 
 class AddStudentPage extends StatelessWidget {
   AddStudentPage({super.key});
   ImagePickerController _imagePickerController = Get.find();
   @override
   Widget build(BuildContext context) {
+    final nameController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Student"),
@@ -28,7 +30,6 @@ class AddStudentPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
               Obx((){
                 if(_imagePickerController.imgPath.value == ''){
                   return IconButton(
@@ -38,19 +39,28 @@ class AddStudentPage extends StatelessWidget {
                         icon: Icon(Icons.image,size: 100,),
                   );
                 }
-                return Image.network(_imagePickerController.imgPath.value);
+                // return Image.network(_imagePickerController.imgPath.value);
+                return Image.file(File(_imagePickerController.imgPath.value));
               }),
-              TextField(
+              const TextField(
+                controller: nameController,
                 decoration: InputDecoration(
                   hintText: "Email"
                 ),
               ),
-              ElevatedButton.icon(onPressed: (){
-                Student s = Student(id:1,name: "test",course: "test",imgPath: "test");
+              ElevatedButton.icon(onPressed: () async {
+                Student s = Student(name: nameController.text,course: "test",imgPath: _imagePickerController.imgPath.value);
                 StudentController studentController = Get.find();
+
+                int id = await StudentDB.instance.addStudent(s);
+
+                s.id = id;
+
                 studentController.addStudent(s);
-                Get.to(HomePage());
-              }, icon: Icon(Icons.send, ), label: Text("Submit"))
+                
+                
+                Get.back();
+              }, icon: const Icon(Icons.send), label: const Text("Submit"))
             ],
           ),
         ),

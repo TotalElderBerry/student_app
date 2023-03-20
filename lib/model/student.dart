@@ -1,9 +1,9 @@
 class Student{
-  int id;
+  int? id;
   String name;
   String course;
   String imgPath;
-  Student({required this.id,required this.name,required this.course,required this.imgPath});
+  Student({required this.name,required this.course,required this.imgPath});
 
   Map<String, dynamic> toMap(){
     return {
@@ -13,6 +13,4 @@ class Student{
       'img': imgPath
     };
   }
-
-  
 }

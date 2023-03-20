@@ -37,7 +37,7 @@ class MyListTile extends StatelessWidget {
                     const SizedBox(height: 15),
                     TextButton(
                       onPressed: () {
-                        studentController.updateStudent(s.id,Student(id: s.id,name: "updated",course: "bscs",imgPath: "test"));
+                        studentController.updateStudent(s.id!, Student(name: "updated",course: "bscs",imgPath: "test"));
                         Navigator.pop(context);
                       },
                       child: const Text('Submit'),
