@@ -10,6 +10,7 @@ import '../../model/student.dart';
 class MyListTile extends StatelessWidget {
   Student s;
   StudentController studentController = Get.find();
+  final updateNameController = TextEditingController();
   MyListTile(this.s);
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,7 @@ class MyListTile extends StatelessWidget {
                     const Text('Edit Details'),
                     const SizedBox(height: 15),
                     TextField(
+                      controller: updateNameController,
                       decoration: InputDecoration(
                         hintText: s.name
                       ),
@@ -37,7 +39,7 @@ class MyListTile extends StatelessWidget {
                     const SizedBox(height: 15),
                     TextButton(
                       onPressed: () {
-                        studentController.updateStudent(s.id!, Student(name: "updated",course: "bscs",imgPath: "test"));
+                        studentController.updateStudent(s.id!, Student(name: updateNameController.text,course: "bscs",imgPath: s.imgPath));
                         Navigator.pop(context);
                       },
                       child: const Text('Submit'),

@@ -10,7 +10,7 @@ class StudentController extends GetxController{
   }
 
   List getStudents(){
-    return students.value;
+    return students;
   }
 
   void addStudent(Student s){

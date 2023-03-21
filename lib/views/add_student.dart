@@ -11,12 +11,25 @@ import 'package:student_app/views/home.dart';
 import '../model/student.dart';
 import '../sources/db.dart';
 
-class AddStudentPage extends StatelessWidget {
+
+class AddStudentPage extends StatefulWidget {
   AddStudentPage({super.key});
+
+  @override
+  State<AddStudentPage> createState() => _AddStudentPageState();
+}
+
+class _AddStudentPageState extends State<AddStudentPage> {
+  final List<String> list = <String>['BSIT', 'BSCS', 'BSCRIM', 'BSIS'];
+
   ImagePickerController _imagePickerController = Get.find();
+
+
+  final nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController();
+    String dropDownvalue = list.first;
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Student"),
@@ -42,14 +55,29 @@ class AddStudentPage extends StatelessWidget {
                 // return Image.network(_imagePickerController.imgPath.value);
                 return Image.file(File(_imagePickerController.imgPath.value));
               }),
-              const TextField(
+              TextField(
                 controller: nameController,
                 decoration: InputDecoration(
                   hintText: "Email"
                 ),
               ),
+                DropdownButton<String>(
+                  value: dropDownvalue,
+                  icon: const Icon(Icons.arrow_downward),
+                  items: list.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? value){
+                      setState(() {
+                        dropDownvalue = value!;
+                      });
+                  }
+                ),
               ElevatedButton.icon(onPressed: () async {
-                Student s = Student(name: nameController.text,course: "test",imgPath: _imagePickerController.imgPath.value);
+                Student s = Student(name: nameController.text,course:dropDownvalue,imgPath: _imagePickerController.imgPath.value);
                 StudentController studentController = Get.find();
 
                 int id = await StudentDB.instance.addStudent(s);

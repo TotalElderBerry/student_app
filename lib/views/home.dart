@@ -31,21 +31,24 @@ class HomePage extends StatelessWidget {
             child: FutureBuilder(
                 future: StudentDB.instance.getStudents(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  Obx((){
                     if (snapshot.hasData) {
+                      print(snapshot.hasData);
                       Get.find<StudentController>().setAllStudent(snapshot.data!);
-                      if(Get.find<StudentController>().students.isEmpty){
-                        return ListView.builder(
+                      if(Get.find<StudentController>().students.isNotEmpty){
+                        ListView.builder(
                             itemCount: Get.find<StudentController>().students.length,
                             itemBuilder: (context, index) {
                               return MyListTile(
                                   Get.find<StudentController>().students[index]);
                             });
                       }else{
+                      }
+                    }
                         return const Center(
                           child: Text("WAY DATA"),
                         );
-                      }
-                    }
+                  });
                     return const Center(
                       child: Text("WAY DATA"),
                     );
