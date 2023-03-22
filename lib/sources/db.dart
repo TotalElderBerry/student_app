@@ -31,11 +31,13 @@ class StudentDB{
   Future<List<Student>> getStudents()async{
     List<Map<String,dynamic>> res = await db!.query('Student');
     return List.generate(res.length, (index){
-      return Student(
+      Student s = Student(
         name: res[index]['name'],
         course: res[index]['course'],
         imgPath: res[index]['img'],
       );
+      s.id = res[index]['id'];
+      return s;
     });
   }
 
@@ -53,6 +55,10 @@ class StudentDB{
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+  Future<int> deleteStudent(Student s) async{
+    return db!.delete('Student',where: 'name = ?',whereArgs: [s.name]);
+  }
 
  
 

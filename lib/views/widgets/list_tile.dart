@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:student_app/sources/db.dart';
 import 'package:student_app/views/add_student.dart';
 
 import '../../controllers/student_controller.dart';
@@ -10,12 +13,13 @@ import '../../model/student.dart';
 class MyListTile extends StatelessWidget {
   Student s;
   StudentController studentController = Get.find();
+
   final updateNameController = TextEditingController();
   MyListTile(this.s);
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.person),
+      leading: Image.file(File(s.imgPath)),
       trailing: Wrap(
         children: [
           IconButton(onPressed: (){
@@ -39,7 +43,7 @@ class MyListTile extends StatelessWidget {
                     const SizedBox(height: 15),
                     TextButton(
                       onPressed: () {
-                        studentController.updateStudent(s.id!, Student(name: updateNameController.text,course: "bscs",imgPath: s.imgPath));
+                        studentController.updateStudent(s.id!, Student(name: updateNameController.text,course: s.course,imgPath: s.imgPath));
                         Navigator.pop(context);
                       },
                       child: const Text('Submit'),
@@ -64,7 +68,7 @@ class MyListTile extends StatelessWidget {
           // Find the ScaffoldMessenger in the widget tree
           // and use it to show a SnackBar.
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-       
+            StudentDB.instance.deleteStudent(s);
             studentController.deleteStudent(s);
           }, icon: Icon(Icons.delete)),
         ],

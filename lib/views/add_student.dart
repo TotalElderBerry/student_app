@@ -79,14 +79,9 @@ class _AddStudentPageState extends State<AddStudentPage> {
               ElevatedButton.icon(onPressed: () async {
                 Student s = Student(name: nameController.text,course:dropDownvalue,imgPath: _imagePickerController.imgPath.value);
                 StudentController studentController = Get.find();
-
                 int id = await StudentDB.instance.addStudent(s);
-
                 s.id = id;
-
                 studentController.addStudent(s);
-                
-                
                 Get.back();
               }, icon: const Icon(Icons.send), label: const Text("Submit"))
             ],

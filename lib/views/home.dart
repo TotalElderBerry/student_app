@@ -12,6 +12,7 @@ class HomePage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    StudentController _studentController = Get.find();
     return Scaffold(
         appBar: AppBar(
           title: const Text("Student App"),
@@ -26,35 +27,26 @@ class HomePage extends StatelessWidget {
                 ))
           ],
         ),
-        body: Column(children: [
+        body: 
+        Column(children: [
           Expanded(
-            child: FutureBuilder(
+            child: 
+             
+             FutureBuilder(
                 future: StudentDB.instance.getStudents(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  Obx((){
-                    if (snapshot.hasData) {
-                      print(snapshot.hasData);
-                      Get.find<StudentController>().setAllStudent(snapshot.data!);
-                      if(Get.find<StudentController>().students.isNotEmpty){
-                        ListView.builder(
+                  return Obx(()  {
+                    return ListView.builder(
                             itemCount: Get.find<StudentController>().students.length,
                             itemBuilder: (context, index) {
                               return MyListTile(
                                   Get.find<StudentController>().students[index]);
                             });
-                      }else{
-                      }
-                    }
-                        return const Center(
-                          child: Text("WAY DATA"),
-                        );
                   });
-                    return const Center(
-                      child: Text("WAY DATA"),
-                    );
-                }
+                }   
             )
-          )
+            
+            )
         ])
     );
   }
