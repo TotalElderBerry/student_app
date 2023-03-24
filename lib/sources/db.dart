@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
 import '../model/student.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 class StudentDB{  
   static final StudentDB _studentDB = StudentDB._internal();
   static Database? db;
@@ -15,6 +15,7 @@ class StudentDB{
     db = await initializeDatabase();
     return db!;
   }
+  
 
   static Future<Database> initializeDatabase()async{
         return db = await openDatabase(
@@ -29,7 +30,8 @@ class StudentDB{
   }
 
   Future<List<Student>> getStudents()async{
-    List<Map<String,dynamic>> res = await db!.query('Student');
+    var myDB = await StudentDB.database;
+    List<Map<String,dynamic>> res = await myDB.query('Student');
     return List.generate(res.length, (index){
       Student s = Student(
         name: res[index]['name'],
@@ -43,7 +45,7 @@ class StudentDB{
 
   Future<int> addStudent(Student dog) async {
   // Get a reference to the database.
-  final db = await database;
+  final db = await StudentDB.database;
 
   // Insert the Dog into the correct table. You might also specify the
   // `conflictAlgorithm` to use in case the same dog is inserted twice.

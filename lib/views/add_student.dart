@@ -22,20 +22,20 @@ class AddStudentPage extends StatefulWidget {
 class _AddStudentPageState extends State<AddStudentPage> {
   final List<String> list = <String>['BSIT', 'BSCS', 'BSCRIM', 'BSIS'];
 
-  ImagePickerController _imagePickerController = Get.find();
+  final ImagePickerController _imagePickerController = Get.find();
 
 
   final nameController = TextEditingController();
 
+  String dropDownvalue = "BSIT";
   @override
   Widget build(BuildContext context) {
-    String dropDownvalue = list.first;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Student"),
+        title: const Text("Add Student"),
       ),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         alignment: Alignment.center,
         child: SizedBox(
           width: 300,
@@ -57,7 +57,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
               }),
               TextField(
                 controller: nameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Email"
                 ),
               ),
@@ -73,6 +73,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
                   onChanged: (String? value){
                       setState(() {
                         dropDownvalue = value!;
+                        print(dropDownvalue);
                       });
                   }
                 ),
@@ -82,6 +83,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
                 int id = await StudentDB.instance.addStudent(s);
                 s.id = id;
                 studentController.addStudent(s);
+                _imagePickerController.imgPath.value = '';
                 Get.back();
               }, icon: const Icon(Icons.send), label: const Text("Submit"))
             ],

@@ -10,47 +10,75 @@ import 'package:student_app/views/add_student.dart';
 import '../../controllers/student_controller.dart';
 import '../../model/student.dart';
 
-class MyListTile extends StatelessWidget {
+class MyListTile extends StatefulWidget {
   Student s;
+  MyListTile(this.s);
+
+  @override
+  State<MyListTile> createState() => _MyListTileState();
+}
+
+class _MyListTileState extends State<MyListTile> {
   StudentController studentController = Get.find();
+  final List<String> nlist = <String>['BSIT', 'BSCS', 'BSCRIM', 'BSIS'];
 
   final updateNameController = TextEditingController();
-  MyListTile(this.s);
+  String dropDownvalue = "BSIT";
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.file(File(s.imgPath)),
+      leading: Image.file(File(widget.s.imgPath)),
       trailing: Wrap(
         children: [
           IconButton(onPressed: (){
             showDialog<String>(
             context: context,
-            builder: (BuildContext context) => Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Edit Details'),
-                    const SizedBox(height: 15),
-                    TextField(
-                      controller: updateNameController,
-                      decoration: InputDecoration(
-                        hintText: s.name
-                      ),
+            builder: (BuildContext context) => StatefulBuilder(
+              builder: (context, setStateSB) {
+                return Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text('Edit Details'),
+                        const SizedBox(height: 15),
+                        TextField(
+                          controller: updateNameController,
+                          decoration: InputDecoration(
+                            hintText: widget.s.name
+                          ),
+                        ),
+                        DropdownButton<String>(
+                          value: dropDownvalue,
+                          icon: const Icon(Icons.arrow_downward),
+                          items: nlist.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value){
+                              setStateSB(() {
+                                dropDownvalue = value!;
+                                print(dropDownvalue);
+                              });
+                          }
+                        ),
+                        const SizedBox(height: 15),
+                        TextButton(
+                          onPressed: () {
+                            studentController.updateStudent(widget.s.id!, Student(name: updateNameController.text,course: dropDownvalue,imgPath: widget.s.imgPath));
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Submit'),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 15),
-                    TextButton(
-                      onPressed: () {
-                        studentController.updateStudent(s.id!, Student(name: updateNameController.text,course: s.course,imgPath: s.imgPath));
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Submit'),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }
             ),
           );
           }, icon: Icon(Icons.edit)),
@@ -60,7 +88,7 @@ class MyListTile extends StatelessWidget {
             action: SnackBarAction(
               label: 'Undo',
               onPressed: () {
-                studentController.addStudent(s);
+                studentController.addStudent(widget.s);
               },
             ),
           );
@@ -68,13 +96,13 @@ class MyListTile extends StatelessWidget {
           // Find the ScaffoldMessenger in the widget tree
           // and use it to show a SnackBar.
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            StudentDB.instance.deleteStudent(s);
-            studentController.deleteStudent(s);
-          }, icon: Icon(Icons.delete)),
+            StudentDB.instance.deleteStudent(widget.s);
+            studentController.deleteStudent(widget.s);
+          }, icon: const Icon(Icons.delete)),
         ],
       ),
-      title: Text(s.name),  
-      subtitle: Text("BSIT"),
+      title: Text(widget.s.name),  
+      subtitle: Text(widget.s.course),
       onTap: ()=>(){
         print("longpressed");
         Get.to(AddStudentPage());
