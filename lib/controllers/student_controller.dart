@@ -7,18 +7,22 @@ class StudentController extends GetxController{
   RxList students = [].obs;
 
   void setAllStudent(List<Student> studs){
-    students.addAll(studs);
+    students.assignAll(studs);
     update();
   }
 
-  List getStudents() {
-    return students;
+  Future<List<Student>> getStudents(String text) async {
+    List<Student> st = await StudentDB.instance.getStudents();
+
+    students.assignAll(st);
+    update();
+
+    return st;
   }
 
   void addStudent(Student s){
     students.add(s);
     update();
-
   }
 
   void deleteStudent(Student s){

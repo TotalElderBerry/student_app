@@ -11,18 +11,20 @@ void main() async {
 
   await StudentDB.initializeDatabase();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-  ImagePickerController imgController = Get.put(ImagePickerController());
-  StudentController _studentController = Get.put(StudentController());
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
+    Get.put(ImagePickerController());
+    Get.put(StudentController());
+
     return GetMaterialApp(
       theme: ThemeData(useMaterial3: true,colorScheme: darkColorScheme),
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
