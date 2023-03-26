@@ -31,6 +31,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Add Student"),
       ),
@@ -44,16 +45,12 @@ class _AddStudentPageState extends State<AddStudentPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Obx((){
-                if(_imagePickerController.imgPath.value == ''){
                   return IconButton(
                     onPressed: (){
                           _imagePickerController.pickImage();
                         },
-                        icon: Icon(Icons.image,size: 100,),
+                        icon: (_imagePickerController.imgPath.value.isEmpty)? Icon(Icons.image,size: 100,):Image.file(File(_imagePickerController.imgPath.value)),
                   );
-                }
-                // return Image.network(_imagePickerController.imgPath.value);
-                return Image.file(File(_imagePickerController.imgPath.value));
               }),
               TextField(
                 controller: nameController,

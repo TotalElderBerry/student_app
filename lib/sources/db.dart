@@ -1,7 +1,7 @@
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/student.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 class StudentDB{  
   static final StudentDB _studentDB = StudentDB._internal();
@@ -18,10 +18,11 @@ class StudentDB{
   
 
   static Future<Database> initializeDatabase()async{
+        var dbPath = await getDatabasesPath();
         return db = await openDatabase(
-              join(await getDatabasesPath(), 'student_db.db'),
-              onCreate: (db, version) {
-                return db.execute(
+              join(dbPath.toString(), 'student_db.db'),
+              onCreate: (dbase, version) {
+                return dbase.execute(
                   'CREATE TABLE Student(id INTEGER PRIMARY KEY, name TEXT, course TEXT, img TEXT)'
                 );
               },
@@ -30,6 +31,8 @@ class StudentDB{
   }
 
   Future<List<Student>> getStudents()async{
+    String dbPath = await getDatabasesPath();
+      print("db path is in "+dbPath);
     var myDB = await StudentDB.database;
     List<Map<String,dynamic>> res = await myDB.query('Student');
     return List.generate(res.length, (index){
@@ -60,6 +63,10 @@ class StudentDB{
 
   Future<int> deleteStudent(Student s) async{
     return db!.delete('Student',where: 'name = ?',whereArgs: [s.name]);
+  }
+
+  Future<void> updateStudent(Student s) async {
+    await db!.update('Student',s.toMap(), where: 'id = ?', whereArgs: [s.id]);
   }
 
  

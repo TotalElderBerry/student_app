@@ -27,7 +27,16 @@ class _MyListTileState extends State<MyListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.file(File(widget.s.imgPath)),
+      leading: ClipRRect(
+        child: Align(
+          alignment: Alignment.center,
+           widthFactor: 1,
+          heightFactor: 1.0,
+          child: Image.file(File(widget.s.imgPath)),
+        ),
+      )
+      
+      ,
       trailing: Wrap(
         children: [
           IconButton(onPressed: (){
@@ -69,7 +78,12 @@ class _MyListTileState extends State<MyListTile> {
                         const SizedBox(height: 15),
                         TextButton(
                           onPressed: () {
-                            studentController.updateStudent(widget.s.id!, Student(name: updateNameController.text,course: dropDownvalue,imgPath: widget.s.imgPath));
+                            Student s = Student(name: updateNameController.text,course: 
+                            dropDownvalue,imgPath: widget.s.imgPath);
+                            s.id = widget.s.id;
+                            studentController.updateStudent(widget.s.id!, s);
+                            StudentDB.instance.updateStudent(s);
+                            // print(s.id);
                             Navigator.pop(context);
                           },
                           child: const Text('Submit'),
@@ -82,6 +96,7 @@ class _MyListTileState extends State<MyListTile> {
             ),
           );
           }, icon: Icon(Icons.edit)),
+          
           IconButton(onPressed: (){
             final snackBar = SnackBar(
             content: const Text('Item Deleted'),
@@ -89,13 +104,14 @@ class _MyListTileState extends State<MyListTile> {
               label: 'Undo',
               onPressed: () {
                 studentController.addStudent(widget.s);
+                StudentDB.instance.addStudent(widget.s);
               },
             ),
           );
 
           // Find the ScaffoldMessenger in the widget tree
           // and use it to show a SnackBar.
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+           ScaffoldMessenger.of(context).showSnackBar(snackBar);
             StudentDB.instance.deleteStudent(widget.s);
             studentController.deleteStudent(widget.s);
           }, icon: const Icon(Icons.delete)),
